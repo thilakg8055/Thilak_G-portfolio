@@ -8,7 +8,7 @@ export const projects = [
     description: "Built a blockchain-based skill verification platform enabling users to create tamper-proof resumes with verified skills. Implemented a workflow for third-party validation where organizations can approve or reject skill claims. Verified data is stored on blockchain ensuring transparency, security, and permanent authenticity.",
     tech: ["#REACT", "#TAILWIND", "#BLOCKCHAIN", "#IPFS", "#METAMASK", "#GSAP"],
     image: "https://plus.unsplash.com/premium_photo-1681400678259-255b10890b08?q=80&w=2079&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=800&q=80",
-    link: "https://skill-verifier-frontend.vercel.app/",
+    link: "https://skill-verifier-frontend-2uqm.vercel.app/",
     github: "https://github.com/thilakg8055/skill-verifier-frontend",
     year: "2024",
     role: "Lead Developer",
