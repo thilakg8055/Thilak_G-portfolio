@@ -45,7 +45,7 @@ export const experiences = [
     role: "Intern",
     company: "Pravartak IIT Madras",
     description:
-      "Gained hands-on experience in research methodologies, system design, and applied AI/CS concepts.",
+      "Gained hands-on experience in research methodologies, system design, and applied AI/CSE concepts.",
     current: true,
   },
   {
