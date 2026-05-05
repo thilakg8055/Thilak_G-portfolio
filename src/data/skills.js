@@ -45,7 +45,7 @@ export const skillCategories = [
       { name: "EXPRESS.JS", level: 88 },
       { name: "MONGODB", level: 85 },
       { name: "REST APIS", level: 60 },
-      { name: "WEBSOCKET", level: 80 },
+      { name: "WEBSOCKET", level: 60 },
       { name: "SQL", level: 75 },
     ],
   },
