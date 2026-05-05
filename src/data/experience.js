@@ -100,7 +100,7 @@ export const education = [
   },
   {
     period: "2020 — 2022",
-    degree: "JUNIOR COLLEGEK",
+    degree: "JUNIOR COLLEGE",
     field: "Science Stream (PCMB)",
     institution: "KRUPANIDHI GROUP OF INSTITUTIONS",
     location: "BANGALORE, INDIA",
