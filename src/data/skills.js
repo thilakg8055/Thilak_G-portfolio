@@ -4,7 +4,7 @@ export const skillCategories = [
     label: "LANGUAGES",
     icon: "{}",
     skills: [
-      { name: "PYTHON", level: 95 },
+      { name: "PYTHON", level: 70 },
       { name: "JAVASCRIPT", level: 90 },
       { name: "TYPESCRIPT", level: 85 },
       { name: "NODE.JS", level: 88 },
@@ -17,12 +17,12 @@ export const skillCategories = [
     label: "AI / ML",
     icon: "◆",
     skills: [
-      { name: "PYTORCH", level: 90 },
-      { name: "TENSORFLOW", level: 85 },
-      { name: "DEEP LEARNING", level: 88 },
-      { name: "COMPUTER VISION", level: 82 },
-      { name: "NLP", level: 80 },
-      { name: "OPENCV", level: 85 },
+      { name: "PYTORCH", level: 10 },
+      { name: "TENSORFLOW", level: 50 },
+      { name: "DEEP LEARNING", level: 10 },
+      { name: "COMPUTER VISION", level: 10 },
+      { name: "NLP", level: 40 },
+      { name: "OPENCV", level: 30 },
     ],
   },
   {
@@ -44,7 +44,7 @@ export const skillCategories = [
     skills: [
       { name: "EXPRESS.JS", level: 88 },
       { name: "MONGODB", level: 85 },
-      { name: "REST APIS", level: 92 },
+      { name: "REST APIS", level: 60 },
       { name: "WEBSOCKET", level: 80 },
       { name: "SQL", level: 75 },
     ],
