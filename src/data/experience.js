@@ -39,6 +39,16 @@
 
 export const experiences = [
   {
+    id: "00",
+    period: "2026 - PRESENT",
+    location: "Chennai, India",
+    role: "Research Intern",
+    company: "Pravartak IIT Madras",
+    description:
+      "Gained hands-on experience in research methodologies, system design, and applied AI/CS concepts.",
+    current: true,
+  },
+  {
     id: "01",
     period: "2025 - PRESENT",
     location: "Bangalore, India",
