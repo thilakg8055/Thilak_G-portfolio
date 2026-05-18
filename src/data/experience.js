@@ -39,7 +39,7 @@
 
 export const experiences = [
   {
-    id: "00",
+    id: "01",
     period: "2026 - PRESENT",
     location: "Chennai, India",
     role: "Intern",
@@ -49,7 +49,7 @@ export const experiences = [
     current: true,
   },
   {
-    id: "01",
+    id: "02",
     period: "2025 - PRESENT",
     location: "Bangalore, India",
     role: "FULL STACK DEVELOPER",
@@ -59,7 +59,7 @@ export const experiences = [
     current: true,
   },
   {
-    id: "02",
+    id: "03",
     period: "2025",
     location: "Bangalore, India",
     role: "FRONTEND & PRODUCT MANAGER",
@@ -69,7 +69,7 @@ export const experiences = [
     current: false,
   },
   {
-    id: "03",
+    id: "04",
     period: "2025",
     location: "Bangalore, India",
     role: "FRONTEND DEVELOPER",
@@ -79,7 +79,7 @@ export const experiences = [
     current: false,
   },
   {
-    id: "04",
+    id: "05",
     period: "2024 - PRESENT",
     location: "Remote",
     role: "FREELANCE DEVELOPER",
@@ -89,7 +89,7 @@ export const experiences = [
     current: false,
   },
   {
-    id: "05",
+    id: "06",
     period: "JUL - AUG 2024",
     location: "Bangalore, India",
     role: "IT INTERN",

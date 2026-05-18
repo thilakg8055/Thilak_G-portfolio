@@ -1,5 +1,19 @@
 export const projects = [
   {
+    id: 0,
+    title: "SPINESIGHT AI",
+    category: "AI / COMPUTER VISION",
+    tag: "AI",
+    tagColor: "#00FFB3",
+    description: "Built an AI-powered spinal X-ray analysis platform using YOLO for vertebra detection and annotation. Implemented image upload, real-time inference, confidence-based detection reporting, and an interactive medical dashboard. Integrated a FastAPI backend with a Next.js frontend and deployed the system for online access.",
+    tech: ["#NEXTJS", "#FASTAPI", "#YOLO", "#PYTHON", "#TAILWIND", "#COMPUTERVISION"],
+    image: "https://i.pinimg.com/736x/de/54/4b/de544b33163f87fd8906160dbe3cda76.jpg",
+    link: "https://spinesight-ai.vercel.app/",
+    github: "https://github.com/thilakg8055/spinesight-ai",
+    year: "2026",
+    role: "Lead Developer",
+  },
+  {
     id: 1,
     title: "BLOCKCHAIN RESUME VERIFIER",
     category: "BLOCKCHAIN / WEB3",
