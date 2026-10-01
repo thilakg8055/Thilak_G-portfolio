@@ -26,32 +26,142 @@ body {
   color: #ffffff;
   font-family: 'Space Grotesk', sans-serif;
   overflow-x: hidden;
-  cursor: none;
 }
 
-/* Custom cursor */
-.cursor {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+/* Robotic targeting cursor (fine pointers only) */
+body.robo-cursor,
+body.robo-cursor * {
+  cursor: none !important;
+}
+
+.robo-cursor-dot {
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
   background: var(--acid);
-  position: fixed;
+  box-shadow: 0 0 10px var(--acid);
   pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transition: transform 0.15s ease;
+  z-index: 10002;
 }
 
-.cursor-follower {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--acid-blue);
+.robo-reticle {
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
-  z-index: 9998;
-  transition: all 0.3s ease;
-  opacity: 0.6;
+  z-index: 10001;
+}
+
+.robo-reticle-frame {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  left: -19px;
+  top: -19px;
+  animation: reticle-spin 6s linear infinite;
+  transition: width 0.25s ease, height 0.25s ease, left 0.25s ease, top 0.25s ease;
+}
+
+.robo-reticle .rc {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--acid-blue);
+  border-style: solid;
+  border-width: 0;
+  transition: border-color 0.25s ease;
+}
+.rc-tl { top: 0; left: 0; border-top-width: 1.5px !important; border-left-width: 1.5px !important; }
+.rc-tr { top: 0; right: 0; border-top-width: 1.5px !important; border-right-width: 1.5px !important; }
+.rc-bl { bottom: 0; left: 0; border-bottom-width: 1.5px !important; border-left-width: 1.5px !important; }
+.rc-br { bottom: 0; right: 0; border-bottom-width: 1.5px !important; border-right-width: 1.5px !important; }
+
+.robo-reticle-label {
+  position: absolute;
+  left: 26px;
+  top: 14px;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: rgba(0, 212, 255, 0.7);
+}
+
+.robo-reticle.is-locked .robo-reticle-frame {
+  width: 54px;
+  height: 54px;
+  left: -27px;
+  top: -27px;
+  animation-duration: 1.2s;
+}
+.robo-reticle.is-locked .rc { border-color: var(--acid); filter: drop-shadow(0 0 4px var(--acid)); }
+.robo-reticle.is-locked .robo-reticle-label { color: var(--acid); left: 34px; }
+
+@keyframes reticle-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* CRT scanline overlay */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 101;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px);
+}
+
+/* Glitch flicker for headings */
+@keyframes glitch-shift {
+  0%, 92%, 100% { transform: translate(0); text-shadow: none; }
+  93% { transform: translate(-3px, 1px); text-shadow: 3px 0 var(--acid), -3px 0 var(--acid-blue); }
+  95% { transform: translate(3px, -1px); text-shadow: -3px 0 var(--acid), 3px 0 var(--acid-blue); }
+  97% { transform: translate(-1px, 0); text-shadow: 1px 0 var(--acid); }
+}
+.glitch {
+  animation: glitch-shift 5s steps(1) infinite;
+}
+
+/* Blinking terminal caret */
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+.caret {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: -0.12em;
+  background: var(--acid);
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+
+/* Laser scan sweep (used on project cards) */
+@keyframes scan-sweep {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+.scan-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 255, 179, 0.18) 85%, rgba(0, 255, 179, 0.9) 100%);
+  animation: scan-sweep 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* Radar sweep */
+.radar-sweep {
+  background: conic-gradient(from 0deg, rgba(0, 255, 179, 0.35), transparent 25%);
+  animation: reticle-spin 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch, .robo-reticle-frame, .scan-beam, .radar-sweep, .marquee-track {
+    animation: none !important;
+  }
 }
 
 /* Scrollbar */

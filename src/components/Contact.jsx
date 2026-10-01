@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import ScrambleText from "./robotics/ScrambleText";
+import HudCorners from "./robotics/HudCorners";
 
 const socials = [
   {
@@ -33,7 +35,14 @@ const socials = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="bg-[#050A0E] py-24 px-6 md:px-16 lg:px-24 relative overflow-hidden">
+    <section id="contact" className="py-24 px-6 md:px-16 lg:px-24 relative overflow-hidden">
+      {/* Radar backdrop */}
+      <div className="absolute -right-40 -top-40 w-[560px] h-[560px] rounded-full pointer-events-none opacity-40 hidden md:block" aria-hidden>
+        <div className="absolute inset-0 rounded-full border border-[#00FFB3]/20" />
+        <div className="absolute inset-[15%] rounded-full border border-[#00FFB3]/15" />
+        <div className="absolute inset-[30%] rounded-full border border-[#00FFB3]/10" />
+        <div className="absolute inset-0 rounded-full radar-sweep" />
+      </div>
       {/* Big bg text */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -49,7 +58,7 @@ export default function Contact() {
       <div className="relative grid md:grid-cols-2 gap-16 items-start">
         {/* Left */}
         <div>
-          <span className="section-num">/ 04</span>
+          <ScrambleText text="/ 04 — OPEN.CHANNEL" className="section-num" />
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -57,11 +66,15 @@ export default function Contact() {
             transition={{ duration: 0.7 }}
             className="font-display text-[clamp(3rem,7vw,6rem)] leading-none text-white mt-4 mb-8"
           >
-            LET'S BUILD<br />
-            SOMETHING<br />
-            <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.3)", color: "transparent" }}>
-              GREAT
-            </span>
+            <ScrambleText text="LET'S BUILD" />
+            <br />
+            <ScrambleText text="SOMETHING" delay={150} />
+            <br />
+            <ScrambleText
+              text="GREAT"
+              delay={300}
+              style={{ WebkitTextStroke: "2px rgba(255,255,255,0.3)", color: "transparent" }}
+            />
           </motion.h2>
 
           <motion.p
@@ -86,8 +99,17 @@ export default function Contact() {
             <span className="font-display text-xl md:text-2xl text-white group-hover:gradient-text transition-all duration-300">
               Tilakg8055@gmail.com
             </span>
-            <span className="w-8 h-8 border border-white/20 flex items-center justify-center text-white/40 group-hover:border-[#00FFB3] group-hover:text-[#00FFB3] transition-colors duration-300">
+            <span className="relative w-8 h-8 border border-white/20 flex items-center justify-center text-white/40 group-hover:border-[#00FFB3] group-hover:text-[#00FFB3] transition-colors duration-300">
               ↗
+              {/* Transmission waves */}
+              {[0, 1, 2].map((k) => (
+                <motion.span
+                  key={k}
+                  className="absolute inset-0 border border-[#00FFB3]"
+                  animate={{ scale: [1, 2.2], opacity: [0.6, 0] }}
+                  transition={{ duration: 2.4, repeat: Infinity, delay: k * 0.8, ease: "easeOut" }}
+                />
+              ))}
             </span>
           </motion.a>
         </div>
@@ -104,13 +126,15 @@ export default function Contact() {
           >
             <h4 className="font-mono text-xs tracking-widest text-[#00FFB3] mb-4">CONTACT</h4>
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-4 p-4 border border-white/10 bg-[#0D1F2D]/40">
+              <div className="relative flex items-center gap-4 p-4 border border-white/10 bg-[#0D1F2D]/40">
+                <HudCorners inset={-1} size={8} />
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} className="text-white/40">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
                 </svg>
                 <span className="text-white/60 font-mono text-sm">+91 9901096221</span>
               </div>
-              <div className="flex items-center gap-4 p-4 border border-white/10 bg-[#0D1F2D]/40">
+              <div className="relative flex items-center gap-4 p-4 border border-white/10 bg-[#0D1F2D]/40">
+                <HudCorners inset={-1} size={8} />
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} className="text-white/40">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                   <circle cx="12" cy="10" r="3" />
@@ -170,7 +194,10 @@ export default function Contact() {
       {/* Footer */}
       <div className="mt-20 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
         <span className="font-mono text-xs text-white/20">© 2026 Thilak.G — Crafted with passion.</span>
-        <span className="font-mono text-xs text-white/20">Built with React + Tailwind CSS</span>
+        <span className="font-mono text-xs text-white/20 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-[#00FFB3] animate-pulse" />
+          ALL SYSTEMS NOMINAL · React + Three.js + Tailwind CSS
+        </span>
       </div>
     </section>
   );

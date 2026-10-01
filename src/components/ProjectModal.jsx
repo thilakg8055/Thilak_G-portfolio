@@ -32,12 +32,20 @@ export default function ProjectModal({ project, onClose }) {
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 40 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, clipPath: "inset(50% 0 50% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(50% 0 50% 0)" }}
+            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-4 md:inset-10 z-50 overflow-auto rounded-none bg-[#0A1628] border border-[#00FFB3]/20"
           >
+            {/* Scanner line that sweeps once as the panel materializes */}
+            <motion.div
+              className="pointer-events-none absolute inset-x-0 h-px bg-[#00FFB3] z-10"
+              style={{ boxShadow: "0 0 20px 4px rgba(0,255,179,0.6)" }}
+              initial={{ top: "50%", opacity: 1 }}
+              animate={{ top: ["50%", "0%", "100%"], opacity: [1, 1, 0] }}
+              transition={{ duration: 1.1, delay: 0.3, ease: "easeInOut" }}
+            />
             <div className="grid md:grid-cols-2 h-full">
               {/* Left: Image */}
               <div className="relative overflow-hidden" style={{ minHeight: "300px" }}>

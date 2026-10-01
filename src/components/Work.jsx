@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { projects } from "../data/projects";
 import ProjectModal from "./ProjectModal";
+import ScrambleText from "./robotics/ScrambleText";
+import HudCorners from "./robotics/HudCorners";
 
 const marqueeItems = ["COMPUTER VISION", "TRADING BOTS", "FULL-STACK", "MCP ARCHITECTURE", "DEEP LEARNING", "NLP SYSTEMS"];
 
@@ -12,7 +14,7 @@ function MarqueeBar() {
         {[...marqueeItems, ...marqueeItems].map((item, i) => (
           <span key={i} className="font-display text-black text-xl tracking-widest flex items-center gap-6">
             {item}
-            <span className="text-black/50">◆</span>
+            <span className="text-black/50">⟁</span>
           </span>
         ))}
       </div>
@@ -25,19 +27,22 @@ export default function Work() {
   const [hoveredId, setHoveredId] = useState(null);
 
   return (
-    <section id="work" className="bg-[#050A0E] pt-0">
+    <section id="work" className="pt-0">
       <MarqueeBar />
 
       <div className="px-6 md:px-16 lg:px-24 py-24">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <span className="section-num">/ 01</span>
+            <ScrambleText text="/ 01 — PROJECT.DATABASE" className="section-num" />
             <h2 className="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-white mt-2">
-              SELECTED<br />
-              <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}>
-                WORKS
-              </span>
+              <ScrambleText text="SELECTED" />
+              <br />
+              <ScrambleText
+                text="WORKS"
+                delay={250}
+                style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}
+              />
             </h2>
           </div>
           <p className="text-white/40 max-w-sm text-right leading-relaxed hidden md:block">
@@ -52,10 +57,10 @@ export default function Work() {
           {projects.map((project, i) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, clipPath: "inset(0 0 100% 0)" }}
+              whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className={`relative overflow-hidden cursor-pointer group ${
                 i === 0 ? "md:col-span-2" : ""
               } ${i === 3 ? "lg:col-span-2" : ""}`}
@@ -70,7 +75,10 @@ export default function Work() {
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover"
-                  animate={{ scale: hoveredId === project.id ? 1.08 : 1 }}
+                  animate={{
+                    scale: hoveredId === project.id ? 1.08 : 1,
+                    filter: hoveredId === project.id ? "grayscale(0) saturate(1.1)" : "grayscale(0.7) saturate(0.8)",
+                  }}
                   transition={{ duration: 0.6 }}
                 />
                 <div className={`absolute inset-0 bg-gradient-to-t from-[#050A0E] via-[#050A0E]/60 to-transparent transition-opacity duration-300 ${
@@ -78,7 +86,21 @@ export default function Work() {
                 }`} />
                 {/* Tint overlay on hover */}
                 <div className={`absolute inset-0 bg-gradient-to-br from-[#00FFB3]/10 to-[#00D4FF]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-400`} />
+                {/* Laser scanner */}
+                {hoveredId === project.id && <div className="scan-beam" />}
               </div>
+
+              <HudCorners active={hoveredId === project.id} inset={10} color={hoveredId === project.id ? "#00FFB3" : "rgba(255,255,255,0.35)"} />
+
+              {/* Vision readout */}
+              <motion.div
+                className="absolute top-6 right-16 z-20 font-mono text-[10px] tracking-widest text-[#00FFB3]"
+                animate={{ opacity: hoveredId === project.id ? 1 : 0 }}
+              >
+                {hoveredId === project.id && (
+                  <ScrambleText text={`ANALYZING · ID_${String(project.id).padStart(3, "0")} · MATCH 98.${(i * 7) % 10}%`} trigger duration={700} />
+                )}
+              </motion.div>
 
               {/* Content */}
               <div className="relative h-full p-6 flex flex-col justify-between" style={{ minHeight: "320px" }}>

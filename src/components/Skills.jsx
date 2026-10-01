@@ -1,8 +1,39 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { skillCategories } from "../data/skills";
+import ScrambleText from "./robotics/ScrambleText";
+
+const SEGMENTS = 24;
+
+function Counter({ value, run, delay }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!run) {
+      setN(0);
+      return;
+    }
+    let raf;
+    let start;
+    const timer = setTimeout(() => {
+      const step = (now) => {
+        start ??= now;
+        const p = Math.min((now - start) / 1100, 1);
+        setN(Math.round(value * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }, delay * 1000);
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
+  }, [value, run, delay]);
+  return <>{String(n).padStart(2, "0")}</>;
+}
 
 function SkillBar({ name, level, index, inView }) {
+  const lit = Math.round((level / 100) * SEGMENTS);
+  const delay = index * 0.08 + 0.2;
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -17,29 +48,59 @@ function SkillBar({ name, level, index, inView }) {
           </span>
           <span className="font-display text-xl text-white tracking-wider">{name}</span>
         </div>
-        <span className="font-mono text-sm text-[#00FFB3]">{level}%</span>
+        <span className="font-mono text-sm text-[#00FFB3]">
+          <Counter value={level} run={inView} delay={delay} />%
+        </span>
       </div>
-      <div className="h-px bg-white/5 relative overflow-hidden">
-        <motion.div
-          className="absolute inset-y-0 left-0 h-full"
-          style={{
-            background: `linear-gradient(90deg, #00FFB3, #00D4FF)`,
-            height: "2px",
-          }}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${level}%` } : { width: 0 }}
-          transition={{ duration: 1.2, delay: index * 0.08 + 0.3, ease: [0.22, 1, 0.36, 1] }}
-        />
-        {/* Glow dot */}
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#00D4FF]"
-          style={{ boxShadow: "0 0 8px #00D4FF" }}
-          initial={{ left: 0 }}
-          animate={inView ? { left: `${level}%` } : { left: 0 }}
-          transition={{ duration: 1.2, delay: index * 0.08 + 0.3, ease: [0.22, 1, 0.36, 1] }}
-        />
+      {/* Segmented diagnostic meter */}
+      <div className="flex gap-[3px]">
+        {Array.from({ length: SEGMENTS }).map((_, i) => (
+          <motion.span
+            key={i}
+            className="h-1.5 flex-1"
+            initial={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+            animate={
+              inView && i < lit
+                ? {
+                    backgroundColor: i === lit - 1 ? "#ffffff" : i / SEGMENTS > 0.6 ? "#00D4FF" : "#00FFB3",
+                    boxShadow: i === lit - 1 ? "0 0 8px #00FFB3" : "0 0 0px transparent",
+                  }
+                : { backgroundColor: "rgba(255,255,255,0.05)", boxShadow: "0 0 0px transparent" }
+            }
+            transition={{ duration: 0.15, delay: delay + i * 0.035 }}
+          />
+        ))}
       </div>
     </motion.div>
+  );
+}
+
+function Radar({ skills }) {
+  // Plot each skill as a blip: angle by index, distance by proficiency.
+  return (
+    <div className="relative aspect-square w-full max-w-[260px] mt-6 hidden lg:block" aria-hidden>
+      <div className="absolute inset-0 rounded-full border border-[#00FFB3]/20" />
+      <div className="absolute inset-[18%] rounded-full border border-[#00FFB3]/15" />
+      <div className="absolute inset-[36%] rounded-full border border-[#00FFB3]/10" />
+      <div className="absolute left-1/2 inset-y-0 w-px bg-[#00FFB3]/10" />
+      <div className="absolute top-1/2 inset-x-0 h-px bg-[#00FFB3]/10" />
+      <div className="absolute inset-0 rounded-full radar-sweep" />
+      {skills.map((sk, i) => {
+        const a = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
+        const r = (sk.level / 100) * 46;
+        return (
+          <motion.span
+            key={sk.name}
+            className="absolute w-2 h-2 -ml-1 -mt-1 rounded-full bg-[#00FFB3]"
+            style={{ left: `${50 + Math.cos(a) * r}%`, top: `${50 + Math.sin(a) * r}%`, boxShadow: "0 0 8px #00FFB3" }}
+            initial={{ scale: 0 }}
+            animate={{ scale: [0, 1.6, 1], opacity: [1, 0.5, 1] }}
+            transition={{ duration: 0.6, delay: 0.3 + i * 0.1, opacity: { duration: 2, repeat: Infinity } }}
+          />
+        );
+      })}
+      <span className="absolute -bottom-6 left-0 font-mono text-[10px] tracking-widest text-white/30">SKILL.SCAN // ACTIVE</span>
+    </div>
   );
 }
 
@@ -60,7 +121,7 @@ export default function Skills() {
   const active = skillCategories.find((c) => c.id === activeCategory);
 
   return (
-    <section id="skills" ref={ref} className="bg-[#050A0E] py-24 px-6 md:px-16 lg:px-24">
+    <section id="skills" ref={ref} className="py-24 px-6 md:px-16 lg:px-24">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -69,12 +130,15 @@ export default function Skills() {
         transition={{ duration: 0.7 }}
         className="mb-16"
       >
-        <span className="section-num">/ 03</span>
+        <ScrambleText text="/ 03 — SYSTEM.DIAGNOSTICS" className="section-num" />
         <h2 className="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-white mt-2">
-          EXPERTISE &<br />
-          <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}>
-            CAPABILITY
-          </span>
+          <ScrambleText text="EXPERTISE &" />
+          <br />
+          <ScrambleText
+            text="CAPABILITY"
+            delay={250}
+            style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}
+          />
         </h2>
       </motion.div>
 
@@ -120,6 +184,7 @@ export default function Skills() {
               </div>
             </motion.button>
           ))}
+          <Radar key={activeCategory} skills={active?.skills ?? []} />
         </div>
 
         {/* Skills */}

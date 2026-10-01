@@ -1,9 +1,16 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { experiences, education } from "../data/experience";
+import ScrambleText from "./robotics/ScrambleText";
+import HudCorners from "./robotics/HudCorners";
 
 export default function Experience() {
+  const timeline = useRef();
+  const { scrollYProgress } = useScroll({ target: timeline, offset: ["start 75%", "end 60%"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 25 });
+
   return (
-    <section id="experience" className="bg-[#050A0E] py-24 px-6 md:px-16 lg:px-24">
+    <section id="experience" className="py-24 px-6 md:px-16 lg:px-24">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -12,39 +19,57 @@ export default function Experience() {
         transition={{ duration: 0.7 }}
         className="mb-20"
       >
-        <span className="section-num">/ 02</span>
+        <ScrambleText text="/ 02 — MISSION.LOG" className="section-num" />
         <h2 className="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-white mt-2">
-          WHERE I'VE<br />
-          <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}>
-            WORKED
-          </span>
+          <ScrambleText text="WHERE I'VE" />
+          <br />
+          <ScrambleText
+            text="WORKED"
+            delay={250}
+            style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}
+          />
         </h2>
       </motion.div>
 
       {/* Timeline */}
-      <div className="relative">
-        {/* Center line (desktop) */}
-        <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px timeline-line" />
+      <div ref={timeline} className="relative">
+        {/* Center circuit line (desktop): draws with scroll, data packets flow down it */}
+        <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-white/5 overflow-hidden">
+          <motion.div className="absolute inset-0 timeline-line origin-top" style={{ scaleY: progress }} />
+          {[0, 1, 2].map((k) => (
+            <motion.span
+              key={k}
+              className="absolute left-0 w-px h-16 bg-gradient-to-b from-transparent via-white to-transparent"
+              animate={{ top: ["-10%", "110%"] }}
+              transition={{ duration: 3.5, repeat: Infinity, delay: k * 1.2, ease: "linear" }}
+            />
+          ))}
+        </div>
 
         <div className="flex flex-col gap-12">
           {experiences.map((exp, i) => (
+            <div key={exp.id} className="relative">
+              {/* Node */}
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true, margin: "-30% 0px" }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                className="hidden lg:flex absolute left-1/2 top-10 w-4 h-4 border-2 items-center justify-center z-10 border-[#00FFB3] bg-[#050A0E]"
+                style={{ x: "-50%", rotate: 45 }}
+              >
+                <span className={`w-1.5 h-1.5 ${exp.current ? "bg-[#00FFB3] animate-ping" : "bg-[#00D4FF]"}`} />
+              </motion.div>
+
             <motion.div
-              key={exp.id}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: i * 0.15 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className={`lg:w-[calc(50%-2rem)] ${i % 2 === 0 ? "lg:mr-auto" : "lg:ml-auto"}`}
             >
-              {/* Dot */}
-              <div className={`hidden lg:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 items-center justify-center ${
-                exp.current ? "border-[#00FFB3] bg-[#00FFB3]" : "border-[#00D4FF] bg-[#050A0E]"
-              }`}
-                style={{ top: `${i * 13 + 2}%` }}
-              />
-
               <div
-                className={`relative p-8 border ${
+                className={`relative p-8 border group ${
                   exp.current
                     ? "border-[#00FFB3]/40 bg-gradient-to-br from-[#00FFB3]/10 to-[#00D4FF]/5"
                     : "border-white/10 bg-[#0D1F2D]/60"
@@ -72,8 +97,16 @@ export default function Experience() {
                   {exp.company}
                 </p>
                 <p className="text-white/50 text-sm leading-relaxed">{exp.description}</p>
+                <HudCorners inset={-1} size={12} color={exp.current ? "#00FFB3" : "#00D4FF"} />
+                {/* Connector from card to node */}
+                <span
+                  className={`hidden lg:block absolute top-12 w-8 h-px bg-gradient-to-r from-[#00FFB3]/60 to-[#00D4FF]/60 ${
+                    i % 2 === 0 ? "-right-8" : "-left-8"
+                  }`}
+                />
               </div>
             </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -101,6 +134,7 @@ export default function Experience() {
               transition={{ duration: 0.5, delay: i * 0.15 }}
               className="p-8 border border-white/10 bg-[#0D1F2D]/40 relative overflow-hidden group"
             >
+              <HudCorners inset={6} size={10} />
               <div
                 className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#00FFB3] to-[#00D4FF]"
               />

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrambleText from "./robotics/ScrambleText";
 
-export default function Navbar() {
+export default function Navbar({ ready = true }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,7 +24,7 @@ export default function Navbar() {
     <>
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        animate={ready ? { y: 0, opacity: 1 } : {}}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between transition-all duration-500 ${
           scrolled ? "bg-[#050A0E]/90 backdrop-blur-xl border-b border-white/5" : ""
@@ -31,10 +32,15 @@ export default function Navbar() {
       >
         {/* Logo */}
         <motion.div
-          className="font-display text-2xl tracking-wider cursor-pointer"
+          className="font-display text-2xl tracking-wider cursor-pointer flex items-center gap-2"
           whileHover={{ scale: 1.05 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          data-cursor="lock"
         >
+          <span className="relative flex w-2.5 h-2.5 mr-1" aria-hidden>
+            <span className="absolute inset-0 bg-[#00FFB3] animate-ping opacity-60" />
+            <span className="relative w-2.5 h-2.5 bg-[#00FFB3]" />
+          </span>
           <span className="text-white">THILAK</span>
           <span className="gradient-text">.</span>
           <span className="text-white">G</span>
@@ -42,14 +48,15 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
+          {navLinks.map((link, i) => (
             <motion.button
               key={link}
               onClick={() => scrollTo(link)}
               className="font-mono text-xs tracking-widest text-white/60 hover:text-white transition-colors duration-300 relative group"
               whileHover={{ y: -1 }}
             >
-              {link}
+              <span className="text-[#00FFB3]/50 mr-1">0{i + 1}.</span>
+              <ScrambleText text={link} trigger={ready} delay={300 + i * 120} duration={600} />
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#00FFB3] to-[#00D4FF] group-hover:w-full transition-all duration-300" />
             </motion.button>
           ))}
